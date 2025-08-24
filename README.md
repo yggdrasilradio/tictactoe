@@ -15,7 +15,7 @@ This shield operates as two distinct parts: an LCD display underneath a touch pa
 used to interface with each, and the LCD display is placed into a different rotation so the LCD and touchscreen
 coordinates are handled separately.
 
-Install `MCUFRIEND_kbv` and `Adafruit TouchScreen` from Arduino IDE Library Manager.
+Install `MCUFRIEND_kbv` and `Adafruit TouchScreen` from the Arduino IDE Library Manager.
 
 See [this page](https://github.com/HowardCraft/AdventureKit2/tree/main/Getting_Started/HERO_XL/240_TouchScreen)
 for more details such as how to calibrate the touchscreen.
