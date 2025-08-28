@@ -15,6 +15,10 @@ This shield operates as two distinct parts: an LCD display underneath a touch pa
 used to interface with each, and the LCD display is placed into a different rotation so the LCD and touchscreen
 coordinates are handled separately.
 
+Look for the `STUPIDITY` setting: it's the percentage chance the computer will make a dumb move each turn.  If
+it's set to zero, the game is unbeatable, I think.  I've got it at 20% which gives the poor human
+a fighting chance.  If you set it to 100% it'll be like playing with a drunk man.
+
 Install `MCUFRIEND_kbv` and `Adafruit TouchScreen` from the Arduino IDE Library Manager.
 
 See [this page](https://github.com/HowardCraft/AdventureKit2/tree/main/Getting_Started/HERO_XL/240_TouchScreen)

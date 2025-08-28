@@ -1,23 +1,37 @@
 #include "tictactoe.h"
 
-typedef int (*MoveStrategy)();
+#define NOMOVE -1
 
 struct StrategyEntry {
-  const char* name;
-  MoveStrategy func;
+  const char *name;
+  int (*strategyRoutine)();
 };
 
 StrategyEntry strategies[] = {
-  { "findWinOrBlock", findWinOrBlock },
+  { "findWin", findWin },
+  { "findTrap", findTrap },
   { "findFork", findFork },
   { "findCenter", findCenter },
   { "findCorner", findCorner },
   { "findRandom", findRandom }
 };
 
+// Percentage chance of making a (likely) dumb move
+// If it's zero, the game is unwinnable
+// If it's 100, you're playing against a drunk
+#define STUPIDITY 20  // %
+
+// Figure out the best move for O
 int findMove() {
-  for (auto& entry : strategies) {
-    int move = entry.func();
+  if (random(100) < STUPIDITY) {
+
+    // A random unoccupied square might be a brilliant move but I doubt it
+    Serial.println("Stupid strategy used: findRandom");
+
+    return findRandom();
+  }
+  for (auto &entry : strategies) {
+    int move = entry.strategyRoutine();
     if (move != NOMOVE) {
       Serial.print("Strategy used: ");
       Serial.println(entry.name);
@@ -27,9 +41,32 @@ int findMove() {
   return NOMOVE;
 }
 
+// Avoid the classic corner fork trap
+int findTrap() {
+
+  // Serialize current state of board
+  String state = "";
+  for (int row = 0; row < 3; ++row) {
+    for (int col = 0; col < 3; ++col) {
+      char c = board[row][col];
+      state += (c == ' ') ? '.' : c;
+    }
+  }
+
+  // Is the player one move away from a classic corner fork trap?
+  if (state == "X...O...X" || state == "..X.O.X..") {
+
+    // Throw a monkey wrench into the works by taking any of the side squares
+    int sideMoves[] = { 1, 3, 5, 7 };
+    return sideMoves[random(0, 4)];
+  }
+
+  return NOMOVE;
+}
+
 // Take a winning move if you find one
 // Otherwise block winning move for player if you find one
-int findWinOrBlock() {
+int findWin() {
 
   int blockMove = -1;
 
@@ -67,7 +104,7 @@ int findWinOrBlock() {
 // Attempt a fork or prevent a fork
 int findFork() {
 
-  int forkScores[9] = { 0 };
+  int scores[9] = { 0 };
 
   // For each empty square
   for (int i = 0; i < 9; i++) {
@@ -97,26 +134,26 @@ int findFork() {
 
         // Potential fork for O?  Try that
         if (xCount == 0 && oCount == 1)
-          forkScores[i] += 2;
+          scores[i] += 2;  // Prioritize this one
 
         // Potential fork for X?  Block it!
         if (xCount == 1 && oCount == 0)
-          forkScores[i]++;
+          scores[i]++;
       }
     }
   }
 
   // Choose square with most potential forks (must be more than one)
-  int bestFork = -1;
+  int bestScore = -1;
   int maxScore = 1;
   for (int i = 0; i < 9; i++) {
-    if (forkScores[i] > maxScore) {
-      bestFork = i;
-      maxScore = forkScores[i];
+    if (scores[i] > maxScore) {
+      bestScore = i;
+      maxScore = scores[i];
     }
   }
-  if (bestFork >= 0)
-    return bestFork;
+  if (bestScore >= 0)
+    return bestScore;
   else
     return NOMOVE;
 }

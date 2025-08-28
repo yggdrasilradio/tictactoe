@@ -48,7 +48,7 @@ void drawO(int row, int col) {
   }
 }
 
-void drawHeading(const char* heading) {
+void drawHeading(const char *heading) {
   tft.setTextSize(3);                     // Larger heading size
   tft.setTextColor(TFT_CYAN, TFT_BLACK);  // Foreground and background
   int16_t x1, y1;
@@ -66,7 +66,7 @@ void drawHeading(const char* heading) {
   tft.print(heading);
 }
 
-void drawStatusMessage(const char* message) {
+void drawStatusMessage(const char *message) {
   tft.setTextSize(2);                     // Adjust size as needed
   tft.setTextColor(TFT_CYAN, TFT_BLACK);  // Foreground and background
   int16_t x1, y1;

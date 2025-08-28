@@ -23,52 +23,6 @@ char lines[8][3] = {
   { 6, 4, 2 }
 };
 
-void initGame() {
-  for (int row = 0; row < 3; row++)
-    for (int col = 0; col < 3; col++)
-      board[row][col] = ' ';
-  tft.fillScreen(TFT_BLACK);
-  drawHeading("TIC TAC TOE");
-  drawTicTacToeBoard();
-  randomSeed(analogRead(0));
-}
-
-// Check for wins or a tie game, indicating the game is over
-char evaluateBoard() {
-
-  // Check for wins
-  for (int i = 0; i < 8; i++) {
-    int x = 0;
-    int o = 0;
-    for (int j = 0; j < 3; j++) {
-      int v = lines[i][j];
-      int row = v / 3;
-      int col = v % 3;
-      char c = board[row][col];
-      if (c == 'X')
-        x++;
-      else if (c == 'O')
-        o++;
-    }
-    if (x == 3)
-      return 'X';
-    else if (o == 3)
-      return 'O';
-  }
-
-  // Check for tie
-  int n = 0;
-  for (int row = 0; row < 3; row++)
-    for (int col = 0; col < 3; col++)
-      if (board[row][col] != ' ')
-        n++;
-
-  if (n == 9)
-    return 'T';  // Tie game
-  else
-    return ' ';  // Game still in progress
-}
-
 void setup() {
 
   // Turn off the onboard LED
@@ -114,7 +68,6 @@ void loop() {
       else if (result == ' ') {
 
         // Computer move
-        //delay(600);
         result = findMove();
         row = result / 3;
         col = result % 3;
@@ -128,4 +81,51 @@ void loop() {
     }
   }
   delay(100);
+}
+
+// Initialize new game
+void initGame() {
+  for (int row = 0; row < 3; row++)
+    for (int col = 0; col < 3; col++)
+      board[row][col] = ' ';
+  tft.fillScreen(TFT_BLACK);
+  drawHeading("TIC TAC TOE");
+  drawTicTacToeBoard();
+  randomSeed(analogRead(A5));
+}
+
+// Check for wins or a tie game, indicating the game is over
+char evaluateBoard() {
+
+  // Check for wins
+  for (int i = 0; i < 8; i++) {
+    int x = 0;
+    int o = 0;
+    for (int j = 0; j < 3; j++) {
+      int v = lines[i][j];
+      int row = v / 3;
+      int col = v % 3;
+      char c = board[row][col];
+      if (c == 'X')
+        x++;
+      else if (c == 'O')
+        o++;
+    }
+    if (x == 3)
+      return 'X';
+    else if (o == 3)
+      return 'O';
+  }
+
+  // Check for tie
+  int n = 0;
+  for (int row = 0; row < 3; row++)
+    for (int col = 0; col < 3; col++)
+      if (board[row][col] != ' ')
+        n++;
+
+  if (n == 9)
+    return 'T';  // Tie game
+  else
+    return ' ';  // Game still in progress
 }

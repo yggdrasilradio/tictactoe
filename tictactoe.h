@@ -31,15 +31,21 @@ extern int xOffset;
 extern int yOffset;
 extern bool bGameOver;
 
+// tictactoe.ino
+void initGame();
+char evaluateBoard();
+
+// display.cpp
 void initDisplay();
 void drawX(int row, int col);
 void drawO(int row, int col);
-void drawHeading(const char* heading);
-void drawStatusMessage(const char* message);
+void drawHeading(const char *heading);
+void drawStatusMessage(const char *message);
 void drawTicTacToeBoard();
 
-#define NOMOVE -1
-int findWinOrBlock();
+// strategy.cpp
+int findWin();
+int findTrap();
 int findFork();
 int findCenter();
 int findCorner();
